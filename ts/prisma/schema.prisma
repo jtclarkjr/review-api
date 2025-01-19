@@ -1,0 +1,45 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Employee {
+  id                String             @id @default(cuid())
+  name              String
+  email             String             @unique
+  password          String
+  isAdmin           Boolean            @default(false)
+  reviews           Review[]           @relation("EmployeeReviews")
+  feedbacks         Feedback[]         @relation("ReviewerFeedbacks")
+  reviewAssignments ReviewAssignment[] @relation("ReviewerAssignments")
+}
+
+model Review {
+  id         String             @id @default(cuid())
+  employee   Employee           @relation(fields: [employeeId], references: [id], name: "EmployeeReviews")
+  employeeId String
+  review     String
+  feedbacks  Feedback[]         @relation("ReviewFeedbacks")
+  reviewers  ReviewAssignment[] @relation("ReviewAssignments")
+}
+
+model Feedback {
+  id         String   @id @default(cuid())
+  review     Review   @relation(fields: [reviewId], references: [id], name: "ReviewFeedbacks", onDelete: Cascade)
+  reviewId   String
+  reviewer   Employee @relation(fields: [reviewerId], references: [id], name: "ReviewerFeedbacks")
+  reviewerId String
+  feedback   String
+}
+
+model ReviewAssignment {
+  id         String   @id @default(cuid())
+  review     Review   @relation(fields: [reviewId], references: [id], name: "ReviewAssignments", onDelete: Cascade)
+  reviewId   String
+  reviewer   Employee @relation(fields: [reviewerId], references: [id], name: "ReviewerAssignments")
+  reviewerId String
+}

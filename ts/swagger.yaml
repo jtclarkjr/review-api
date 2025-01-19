@@ -1,0 +1,442 @@
+openapi: 3.0.0
+paths:
+  /auth/login:
+    post:
+      operationId: AuthController_login
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AuthDto"
+      responses:
+        "201":
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthResponseDto"
+      tags:
+        - Auth
+  /admin/employees:
+    post:
+      operationId: EmployeeController_createEmployee
+      summary: Add a new employee
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateEmployeeDto"
+      responses:
+        "201":
+          description: Employee created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EmployeeResponseDto"
+        "400":
+          description: An employee with the same name or email already exists.
+      tags: &a1
+        - Admin Employees
+      security: &a2
+        - bearer: []
+    get:
+      operationId: EmployeeController_getEmployees
+      summary: View all employees
+      parameters: []
+      responses:
+        "200":
+          description: A list of employees
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/EmployeeResponseDto"
+      tags: *a1
+      security: *a2
+  /admin/employees/{id}:
+    put:
+      operationId: EmployeeController_updateEmployee
+      summary: Update an existing employee
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateEmployeeDto"
+      responses:
+        "200":
+          description: Employee updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EmployeeResponseDto"
+        "400":
+          description: An employee with the same name or email already exists.
+      tags: *a1
+      security: *a2
+    delete:
+      operationId: EmployeeController_deleteEmployee
+      summary: Delete an employee
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Employee deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EmployeeResponseDto"
+      tags: *a1
+      security: *a2
+  /admin/reviews:
+    post:
+      operationId: ReviewController_createReview
+      summary: Create a new review
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateReviewDto"
+      responses:
+        "201":
+          description: The review has been successfully created.
+      tags: &a3
+        - Reviews
+      security: &a4
+        - bearer: []
+    get:
+      operationId: ReviewController_getReviews
+      summary: Get all reviews
+      parameters: []
+      responses:
+        "200":
+          description: Returns all reviews.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ReviewDto"
+      tags: *a3
+      security: *a4
+  /admin/reviews/{id}:
+    put:
+      operationId: ReviewController_updateReview
+      summary: Update an existing review
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateReviewDto"
+      responses:
+        "200":
+          description: The review has been successfully updated.
+      tags: *a3
+      security: *a4
+    delete:
+      operationId: ReviewController_deleteReview
+      summary: Delete a review
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        "200":
+          description: The review has been successfully deleted.
+      tags: *a3
+      security: *a4
+  /admin/reviews/{id}/assign:
+    post:
+      operationId: ReviewController_assignReviewers
+      summary: Assign reviewers to a review
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AssignReviewersDto"
+      responses:
+        "201":
+          description: The reviewers have been successfully assigned.
+      tags: *a3
+      security: *a4
+  /feedback:
+    get:
+      operationId: FeedbackController_getUserReviews
+      summary: Get reviews assigned to current user
+      parameters: []
+      responses:
+        "200":
+          description: Returns the reviews for the current user.
+      tags: &a5
+        - Feedback
+      security: &a6
+        - bearer: []
+    post:
+      operationId: FeedbackController_createFeedback
+      summary: Submit feedback for a performance review
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateFeedbackDto"
+      responses:
+        "201":
+          description: Feedback submitted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FeedbackResponseDto"
+      tags: *a5
+      security: *a6
+  /feedback/me:
+    get:
+      operationId: FeedbackController_getFeedbacks
+      summary: Get feedbacks submitted by the current user
+      parameters: []
+      responses:
+        "200":
+          description: A list of feedbacks
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/FeedbackResponseDto"
+      tags: *a5
+      security: *a6
+  /feedback/review/{reviewId}:
+    get:
+      operationId: FeedbackController_getReviewFeedbacks
+      summary: Get feedbacks for a specific review
+      parameters:
+        - name: reviewId
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        "200":
+          description: A list of feedbacks for the review
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/FeedbackResponseDto"
+      tags: *a5
+      security: *a6
+info:
+  title: Employee Performance Review API
+  description: API for managing employees and performance reviews
+  version: "1.0"
+  contact: {}
+tags: []
+servers: []
+components:
+  securitySchemes:
+    bearer:
+      scheme: bearer
+      bearerFormat: JWT
+      type: http
+  schemas:
+    AuthDto:
+      type: object
+      properties:
+        email:
+          type: string
+          example: admin@company.com
+        password:
+          type: string
+          example: adminpassword
+      required:
+        - email
+        - password
+    AuthResponseDto:
+      type: object
+      properties:
+        accessToken:
+          type: string
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+      required:
+        - accessToken
+    CreateEmployeeDto:
+      type: object
+      properties:
+        name:
+          type: string
+          example: John Doe
+        email:
+          type: string
+          example: john.doe@example.com
+        password:
+          type: string
+          example: password123
+        isAdmin:
+          type: boolean
+          example: false
+      required:
+        - name
+        - email
+        - password
+        - isAdmin
+    EmployeeResponseDto:
+      type: object
+      properties:
+        id:
+          type: string
+          example: cl0m3s93z0000xv8xkhc79p4w
+        name:
+          type: string
+          example: John Doe
+        email:
+          type: string
+          example: john.doe@example.com
+        isAdmin:
+          type: boolean
+          example: false
+      required:
+        - id
+        - name
+        - email
+        - isAdmin
+    UpdateEmployeeDto:
+      type: object
+      properties:
+        name:
+          type: string
+          example: John Doe
+        email:
+          type: string
+          example: john.doe@example.com
+        password:
+          type: string
+          example: password123
+        isAdmin:
+          type: boolean
+          example: false
+      required:
+        - name
+        - email
+        - password
+        - isAdmin
+    CreateReviewDto:
+      type: object
+      properties:
+        employeeId:
+          type: string
+          example: cl0m3s93z0000xv8xkhc79p4w
+        review:
+          type: string
+          example: Excellent performance in Q1
+      required:
+        - employeeId
+        - review
+    UpdateReviewDto:
+      type: object
+      properties:
+        review:
+          type: string
+          example: Excellent performance in Q1
+        employeeId:
+          type: string
+          example: cl0m3s93z0000xv8xkhc79p4w
+    ReviewDto:
+      type: object
+      properties:
+        id:
+          type: string
+          example: cl0m3s93z0000xv8xkhc79p4w
+        employeeId:
+          type: string
+          example: cl0m3s93z0000xv8xkhc79p4w
+        review:
+          type: string
+          example: Excellent performance in Q1
+        reviewers:
+          type: array
+          items:
+            $ref: "#/components/schemas/EmployeeResponseDto"
+      required:
+        - id
+        - employeeId
+        - review
+        - reviewers
+    AssignReviewersDto:
+      type: object
+      properties:
+        reviewerIds:
+          example:
+            - cl0m3s93z0000xv8xkhc79p4w
+            - cl0m3s93z0000xv8xkhc79p4x
+          type: array
+          items:
+            type: string
+      required:
+        - reviewerIds
+    CreateFeedbackDto:
+      type: object
+      properties:
+        reviewId:
+          type: string
+          example: cl0m3s93z0000xv8xkhc79p4w
+        feedback:
+          type: string
+          example: Very good performance, but needs to improve time management
+      required:
+        - reviewId
+        - feedback
+    FeedbackResponseDto:
+      type: object
+      properties:
+        id:
+          type: string
+          example: cl0m3s93z0000xv8xkhc79p4w
+        reviewId:
+          type: string
+          example: cl0m3s93z0000xv8xkhc79p4w
+        reviewerId:
+          type: string
+          example: cl0m3s93z0000xv8xkhc79p4w
+        feedback:
+          type: string
+          example: Very good performance, but needs to improve time management
+      required:
+        - id
+        - reviewId
+        - reviewerId
+        - feedback
