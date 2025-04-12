@@ -1,13 +1,17 @@
 module go-api
 
-go 1.23.3
+go 1.24.1
 
 require (
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
-	github.com/go-chi/chi/v5 v5.1.0
 	github.com/lib/pq v1.10.9
 	github.com/swaggo/http-swagger v1.3.4
 	golang.org/x/crypto v0.29.0
+)
+
+require (
+	github.com/jtclarkjr/router-go v0.1.0-alpha.2
+	github.com/swaggo/swag v1.16.4
 )
 
 require (
@@ -19,7 +23,6 @@ require (
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/mailru/easyjson v0.7.6 // indirect
 	github.com/swaggo/files v0.0.0-20220610200504-28940afbdbfe // indirect
-	github.com/swaggo/swag v1.16.4 // indirect
 	golang.org/x/net v0.23.0 // indirect
 	golang.org/x/sys v0.27.0 // indirect
 	golang.org/x/tools v0.7.0 // indirect

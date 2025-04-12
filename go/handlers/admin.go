@@ -6,9 +6,10 @@ import (
 	"net/http"
 	"sync"
 
-	"github.com/go-chi/chi/v5"
-	"github.com/lib/pq"
 	"go-api/db"
+
+	"github.com/jtclarkjr/router-go"
+	"github.com/lib/pq"
 )
 
 // /employees handlers
@@ -110,7 +111,7 @@ func GetEmployees(w http.ResponseWriter, r *http.Request) {
 }
 
 func UpdateEmployee(w http.ResponseWriter, r *http.Request) {
-	employeeID := chi.URLParam(r, "id")
+	employeeID := router.URLParam(r, "id")
 
 	var employee struct {
 		Email    string `json:"email"`
@@ -135,7 +136,7 @@ func UpdateEmployee(w http.ResponseWriter, r *http.Request) {
 }
 
 func RemoveEmployee(w http.ResponseWriter, r *http.Request) {
-	employeeID := chi.URLParam(r, "id")
+	employeeID := router.URLParam(r, "id")
 
 	_, err := db.Conn.Exec("DELETE FROM employees WHERE id = $1", employeeID)
 	if err != nil {
@@ -227,7 +228,7 @@ func AddReview(w http.ResponseWriter, r *http.Request) {
 
 // UpdateReview updates the performance review text and reviewers
 func UpdateReview(w http.ResponseWriter, r *http.Request) {
-	reviewID := chi.URLParam(r, "id")
+	reviewID := router.URLParam(r, "id")
 
 	var payload struct {
 		PerformanceReview string `json:"performance_review"` // Updated review text

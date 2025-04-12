@@ -4,13 +4,14 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/go-chi/chi/v5"
-	"github.com/go-chi/chi/v5/middleware"
-	"github.com/swaggo/http-swagger"
 	"go-api/db"
 	_ "go-api/docs"
 	"go-api/handlers"
 	"go-api/middlewares"
+
+	"github.com/jtclarkjr/router-go"
+	"github.com/jtclarkjr/router-go/middleware"
+	httpSwagger "github.com/swaggo/http-swagger"
 )
 
 // @title Go API
@@ -29,7 +30,7 @@ func main() {
 	db.Connect()
 	db.SeedDatabase()
 
-	r := chi.NewRouter()
+	r := router.NewRouter()
 	r.Use(middleware.Logger)
 	r.Use(middleware.Recoverer)
 
@@ -39,7 +40,7 @@ func main() {
 	// Login to generate token route
 	r.Post("/login", handlers.Login)
 
-	r.Route("/admin", func(r chi.Router) {
+	r.Route("/admin", func(r *router.Router) {
 		r.Use(middlewares.AuthAdmin)
 		r.Post("/employees", handlers.AddEmployee)
 		r.Get("/employees", handlers.GetEmployees)
@@ -51,7 +52,7 @@ func main() {
 		r.Put("/reviews/{id}/comments", handlers.UpdateReview)
 	})
 
-	r.Route("/employee", func(r chi.Router) {
+	r.Route("/employee", func(r *router.Router) {
 		r.Use(middlewares.AuthEmployee)
 		r.Get("/reviews", handlers.ListReviews)
 		r.Post("/reviews/feedback", handlers.SubmitFeedback)
