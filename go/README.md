@@ -92,7 +92,6 @@ Employees can:
 - **PostgreSQL** as the database backend.
 
 ### Dependencies
-- [chi](https://github.com/go-chi/chi): For routing and middleware.
 - [bcrypt](https://pkg.go.dev/golang.org/x/crypto/bcrypt): For password hashing.
 - [jwt-go](https://github.com/dgrijalva/jwt-go): For JSON Web Tokens authentication.
 
