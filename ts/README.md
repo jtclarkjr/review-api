@@ -31,6 +31,7 @@
 ```bash
 $ bun i
 $ bunx prisma generate
+$ bunx prisma migrate dev (or deploy)
 ```
 
 ## Running the app
