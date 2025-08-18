@@ -5,7 +5,7 @@ import {
   UpdateEmployeeDto,
   EmployeeResponseDto,
 } from './employee.dto';
-import { Employee } from '@prisma/client';
+import { Employee, Prisma } from '@prisma/client';
 
 @Injectable()
 export class EmployeeService {
@@ -16,7 +16,7 @@ export class EmployeeService {
     email: string,
     excludeId?: string,
   ): Promise<void> {
-    const conditions: any = {
+  const conditions: Prisma.EmployeeWhereInput = {
       OR: [{ name }, { email }],
     };
 

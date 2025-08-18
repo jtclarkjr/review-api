@@ -1,16 +1,14 @@
 import { Injectable, BadRequestException } from '@nestjs/common';
 import { PrismaService } from 'prisma/prisma.service';
 import { Review } from '@prisma/client';
+import { CreateReviewDto, UpdateReviewDto } from './review.dto';
 import { ReviewDto } from './review.dto';
 
 @Injectable()
 export class ReviewService {
   constructor(private prisma: PrismaService) {}
 
-  async createReview(data: {
-    review: string;
-    employeeId: string;
-  }): Promise<Review> {
+  async createReview(data: CreateReviewDto): Promise<Review> {
     return this.prisma.review.create({
       data: {
         review: data.review,
@@ -21,10 +19,7 @@ export class ReviewService {
     });
   }
 
-  async updateReview(
-    id: string,
-    data: { review?: string; employeeId?: string },
-  ): Promise<Review> {
+  async updateReview(id: string, data: UpdateReviewDto): Promise<Review> {
     const existingReview = await this.prisma.review.findUnique({
       where: { id },
     });
