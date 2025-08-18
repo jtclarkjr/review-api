@@ -23,6 +23,7 @@ export class UserGuard extends AuthGuard('jwt') {
       request.user = user;
       return true;
     } catch (err) {
+      console.error('JWT verification error:', err);
       throw new UnauthorizedException('Invalid token');
     }
   }
