@@ -47,6 +47,12 @@ $ bun start:dev
 $ bun start:prod
 ```
 
+## Running Prisma
+
+```bash
+$ bunx prisma studio
+```
+
 ## Test
 
 ```bash
