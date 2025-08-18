@@ -29,33 +29,34 @@
 ## Installation
 
 ```bash
-$ npm install
+$ bun i
+$ bunx prisma generate
 ```
 
 ## Running the app
 
 ```bash
 # development
-$ npm run start
+$ bun start
 
 # watch mode
-$ npm run start:dev
+$ bun start:dev
 
 # production mode
-$ npm run start:prod
+$ bun start:prod
 ```
 
 ## Test
 
 ```bash
 # unit tests
-$ npm run test
+$ bun test
 
 # e2e tests
-$ npm run test:e2e
+$ bun test:e2e
 
 # test coverage
-$ npm run test:cov
+$ bun test:cov
 ```
 
 ## Support
