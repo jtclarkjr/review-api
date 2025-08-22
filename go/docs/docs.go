@@ -485,8 +485,6 @@ var SwaggerInfo = &swag.Spec{
 	Description:      "This is a sample server for a GO API.",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
-	LeftDelim:        "{{",
-	RightDelim:       "}}",
 }
 
 func init() {

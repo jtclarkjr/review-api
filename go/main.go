@@ -11,7 +11,7 @@ import (
 
 	"github.com/jtclarkjr/router-go"
 	"github.com/jtclarkjr/router-go/middleware"
-	httpSwagger "github.com/swaggo/http-swagger"
+	httpSwagger "github.com/swaggo/http-swagger/v2"
 )
 
 // @title Go API
