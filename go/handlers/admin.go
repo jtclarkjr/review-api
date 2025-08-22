@@ -14,6 +14,17 @@ import (
 
 // /employees handlers
 
+// AddEmployee godoc
+// @Summary Add a new employee
+// @Description Adds a new employee to the system
+// @Tags Admin
+// @Accept json
+// @Produce json
+// @Param employee body object true "Employee info"
+// @Success 201 {object} map[string]interface{}
+// @Failure 400 {string} string "Bad Request"
+// @Failure 500 {string} string "Internal Server Error"
+// @Router /admin/employees [post]
 func AddEmployee(w http.ResponseWriter, r *http.Request) {
 	var employee struct {
 		Email    string `json:"email"`
@@ -75,6 +86,14 @@ func AddEmployee(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// GetEmployees godoc
+// @Summary Get all employees
+// @Description Retrieves a list of all employees
+// @Tags Admin
+// @Produce json
+// @Success 200 {array} map[string]interface{}
+// @Failure 500 {string} string "Internal Server Error"
+// @Router /admin/employees [get]
 func GetEmployees(w http.ResponseWriter, r *http.Request) {
 	rows, err := db.Conn.Query("SELECT id, email, position FROM employees")
 	if err != nil {
@@ -110,6 +129,19 @@ func GetEmployees(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// UpdateEmployee godoc
+// @Summary Update an employee
+// @Description Updates an employee's information
+// @Tags Admin
+// @Accept json
+// @Produce json
+// @Param id path int true "Employee ID"
+// @Param employee body object true "Employee info"
+// @Success 204 {string} string "No Content"
+// @Failure 400 {string} string "Bad Request"
+// @Failure 404 {string} string "Not Found"
+// @Failure 500 {string} string "Internal Server Error"
+// @Router /admin/employees/{id} [put]
 func UpdateEmployee(w http.ResponseWriter, r *http.Request) {
 	employeeID := router.URLParam(r, "id")
 
@@ -135,6 +167,15 @@ func UpdateEmployee(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusNoContent)
 }
 
+// RemoveEmployee godoc
+// @Summary Remove an employee
+// @Description Removes an employee from the system
+// @Tags Admin
+// @Param id path int true "Employee ID"
+// @Success 204 {string} string "No Content"
+// @Failure 404 {string} string "Not Found"
+// @Failure 500 {string} string "Internal Server Error"
+// @Router /admin/employees/{id} [delete]
 func RemoveEmployee(w http.ResponseWriter, r *http.Request) {
 	employeeID := router.URLParam(r, "id")
 
@@ -149,7 +190,17 @@ func RemoveEmployee(w http.ResponseWriter, r *http.Request) {
 
 // /review handlers
 
-// AddReview creates a new performance review and assigns reviewers
+// AddReview godoc
+// @Summary Add a new review
+// @Description Creates a new performance review and assigns reviewers
+// @Tags Admin
+// @Accept json
+// @Produce json
+// @Param review body object true "Review info"
+// @Success 201 {object} map[string]interface{}
+// @Failure 400 {string} string "Bad Request"
+// @Failure 500 {string} string "Internal Server Error"
+// @Router /admin/reviews [post]
 func AddReview(w http.ResponseWriter, r *http.Request) {
 	var review struct {
 		EmployeeID        int    `json:"employee_id"`        // Employee being reviewed
@@ -226,7 +277,19 @@ func AddReview(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// UpdateReview updates the performance review text and reviewers
+// UpdateReview godoc
+// @Summary Update a review
+// @Description Updates the performance review text and reviewers
+// @Tags Admin
+// @Accept json
+// @Produce json
+// @Param id path int true "Review ID"
+// @Param review body object true "Review info"
+// @Success 204 {string} string "No Content"
+// @Failure 400 {string} string "Bad Request"
+// @Failure 404 {string} string "Not Found"
+// @Failure 500 {string} string "Internal Server Error"
+// @Router /admin/reviews/{id}/comments [put]
 func UpdateReview(w http.ResponseWriter, r *http.Request) {
 	reviewID := router.URLParam(r, "id")
 
@@ -304,7 +367,14 @@ func UpdateReview(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusNoContent)
 }
 
-// GetReviews fetches all reviews along with reviewers
+// GetReviews godoc
+// @Summary Get all reviews
+// @Description Fetches all reviews along with reviewers
+// @Tags Admin
+// @Produce json
+// @Success 200 {array} map[string]interface{}
+// @Failure 500 {string} string "Internal Server Error"
+// @Router /admin/reviews [get]
 func GetReviews(w http.ResponseWriter, r *http.Request) {
 	rows, err := db.Conn.Query(`
 		SELECT r.id, r.employee_id, e.email AS employee_email, r.performance_review, r.comments, r.created_at,

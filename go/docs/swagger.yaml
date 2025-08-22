@@ -14,6 +14,268 @@ info:
   title: Go API
   version: "1.0"
 paths:
+  /admin/employees:
+    get:
+      description: Retrieves a list of all employees
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              additionalProperties: true
+              type: object
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Get all employees
+      tags:
+      - Admin
+    post:
+      consumes:
+      - application/json
+      description: Adds a new employee to the system
+      parameters:
+      - description: Employee info
+        in: body
+        name: employee
+        required: true
+        schema:
+          type: object
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Add a new employee
+      tags:
+      - Admin
+  /admin/employees/{id}:
+    delete:
+      description: Removes an employee from the system
+      parameters:
+      - description: Employee ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "204":
+          description: No Content
+          schema:
+            type: string
+        "404":
+          description: Not Found
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Remove an employee
+      tags:
+      - Admin
+    put:
+      consumes:
+      - application/json
+      description: Updates an employee's information
+      parameters:
+      - description: Employee ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Employee info
+        in: body
+        name: employee
+        required: true
+        schema:
+          type: object
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "404":
+          description: Not Found
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Update an employee
+      tags:
+      - Admin
+  /admin/reviews:
+    get:
+      description: Fetches all reviews along with reviewers
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              additionalProperties: true
+              type: object
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Get all reviews
+      tags:
+      - Admin
+    post:
+      consumes:
+      - application/json
+      description: Creates a new performance review and assigns reviewers
+      parameters:
+      - description: Review info
+        in: body
+        name: review
+        required: true
+        schema:
+          type: object
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Add a new review
+      tags:
+      - Admin
+  /admin/reviews/{id}/comments:
+    put:
+      consumes:
+      - application/json
+      description: Updates the performance review text and reviewers
+      parameters:
+      - description: Review ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Review info
+        in: body
+        name: review
+        required: true
+        schema:
+          type: object
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "404":
+          description: Not Found
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Update a review
+      tags:
+      - Admin
+  /employee/reviews:
+    get:
+      description: Lists reviews assigned to the employee that have not been submitted
+        yet
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              additionalProperties: true
+              type: object
+            type: array
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: List assigned reviews
+      tags:
+      - Employee
+  /employee/reviews/feedback:
+    post:
+      consumes:
+      - application/json
+      description: Submits feedback for a review assigned to the employee
+      parameters:
+      - description: Feedback info
+        in: body
+        name: feedback
+        required: true
+        schema:
+          type: object
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Submit review feedback
+      tags:
+      - Employee
   /login:
     post:
       consumes:

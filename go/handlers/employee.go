@@ -8,6 +8,15 @@ import (
 	"go-api/db"
 )
 
+// ListReviews godoc
+// @Summary List assigned reviews
+// @Description Lists reviews assigned to the employee that have not been submitted yet
+// @Tags Employee
+// @Produce json
+// @Success 200 {array} map[string]interface{}
+// @Failure 401 {string} string "Unauthorized"
+// @Failure 500 {string} string "Internal Server Error"
+// @Router /employee/reviews [get]
 func ListReviews(w http.ResponseWriter, r *http.Request) {
 	// Get id from context added from auth
 	idValue := r.Context().Value("id")
@@ -66,6 +75,18 @@ func ListReviews(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// SubmitFeedback godoc
+// @Summary Submit review feedback
+// @Description Submits feedback for a review assigned to the employee
+// @Tags Employee
+// @Accept json
+// @Produce json
+// @Param feedback body object true "Feedback info"
+// @Success 201 {object} map[string]interface{}
+// @Failure 400 {string} string "Bad Request"
+// @Failure 401 {string} string "Unauthorized"
+// @Failure 500 {string} string "Internal Server Error"
+// @Router /employee/reviews/feedback [post]
 func SubmitFeedback(w http.ResponseWriter, r *http.Request) {
 	// Get id from context added from auth
 	idValue := r.Context().Value("id")
