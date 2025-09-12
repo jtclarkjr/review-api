@@ -23,6 +23,7 @@ import {
   ApiParam,
 } from '@nestjs/swagger';
 import { UserGuard } from 'src/auth/user.guard';
+import { AuthenticatedRequest } from 'src/auth/authenticated-request.interface';
 
 @ApiTags('Feedback')
 @ApiBearerAuth()
@@ -37,7 +38,7 @@ export class FeedbackController {
     status: 200,
     description: 'Returns the reviews for the current user.',
   })
-  async getUserReviews(@Req() req): Promise<FeebackReviewsDto[]> {
+  async getUserReviews(@Req() req: AuthenticatedRequest): Promise<FeebackReviewsDto[]> {
     const reviewerId = req.user.id;
     return this.feedbackService.getUserReviews(reviewerId);
   }
@@ -51,7 +52,7 @@ export class FeedbackController {
     type: FeedbackResponseDto,
   })
   async createFeedback(
-    @Req() req,
+    @Req() req: AuthenticatedRequest,
     @Body() feedbackData: CreateFeedbackDto,
   ): Promise<FeedbackResponseDto> {
     const reviewerId = req.user.id;
@@ -65,7 +66,7 @@ export class FeedbackController {
     description: 'A list of feedbacks',
     type: [FeedbackResponseDto],
   })
-  async getFeedbacks(@Req() req): Promise<FeedbackResponseDto[]> {
+  async getFeedbacks(@Req() req: AuthenticatedRequest): Promise<FeedbackResponseDto[]> {
     const reviewerId = req.user.id;
     return this.feedbackService.getFeedbacks(reviewerId);
   }
