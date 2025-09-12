@@ -22,9 +22,9 @@ func AuthAdmin(next http.Handler) http.Handler {
 		tokenStr = strings.TrimPrefix(tokenStr, "Bearer ")
 
 		claims := &handlers.Claims{}
-		token, err := jwt.ParseWithClaims(tokenStr, claims, func(token *jwt.Token) (interface{}, error) {
-			return []byte("your_secret_key"), nil // Ensure this matches JwtKey
-		})
+	token, err := jwt.ParseWithClaims(tokenStr, claims, func(token *jwt.Token) (interface{}, error) {
+		return handlers.JwtKey, nil // Use the proper JwtKey from handlers
+	})
 
 		if err != nil {
 			fmt.Printf("Error while parsing token: %v\n", err)
@@ -53,9 +53,9 @@ func AuthEmployee(next http.Handler) http.Handler {
 
 		tokenStr = strings.TrimPrefix(tokenStr, "Bearer ")
 		claims := &handlers.Claims{}
-		token, err := jwt.ParseWithClaims(tokenStr, claims, func(token *jwt.Token) (interface{}, error) {
-			return "your_secret_key", nil
-		})
+	token, err := jwt.ParseWithClaims(tokenStr, claims, func(token *jwt.Token) (interface{}, error) {
+		return handlers.JwtKey, nil
+	})
 		if err != nil || !token.Valid || claims.Role != "employee" {
 			http.Error(w, "Forbidden: invalid token or insufficient privileges", http.StatusForbidden)
 			return

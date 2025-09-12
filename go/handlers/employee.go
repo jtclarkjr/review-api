@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"go-api/db"
+	"go-api/types"
 )
 
 // ListReviews godoc
@@ -13,7 +14,7 @@ import (
 // @Description Lists reviews assigned to the employee that have not been submitted yet
 // @Tags Employee
 // @Produce json
-// @Success 200 {array} map[string]interface{}
+// @Success 200 {array} types.AssignedReviewResponse
 // @Failure 401 {string} string "Unauthorized"
 // @Failure 500 {string} string "Internal Server Error"
 // @Router /employee/reviews [get]
@@ -47,7 +48,7 @@ func ListReviews(w http.ResponseWriter, r *http.Request) {
 	}()
 
 	// Build the list of reviews
-	var reviews []map[string]interface{}
+	var reviews []types.AssignedReviewResponse
 	for rows.Next() {
 		var id int
 		var employeeEmail, performanceReview string
@@ -55,10 +56,10 @@ func ListReviews(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, "Error scanning review data", http.StatusInternalServerError)
 			return
 		}
-		reviews = append(reviews, map[string]interface{}{
-			"id":                 id,
-			"employee_email":     employeeEmail,
-			"performance_review": performanceReview,
+		reviews = append(reviews, types.AssignedReviewResponse{
+			ID:                id,
+			EmployeeEmail:     employeeEmail,
+			PerformanceReview: performanceReview,
 		})
 	}
 
@@ -82,7 +83,7 @@ func ListReviews(w http.ResponseWriter, r *http.Request) {
 // @Accept json
 // @Produce json
 // @Param feedback body object true "Feedback info"
-// @Success 201 {object} map[string]interface{}
+// @Success 201 {object} types.MessageResponse
 // @Failure 400 {string} string "Bad Request"
 // @Failure 401 {string} string "Unauthorized"
 // @Failure 500 {string} string "Internal Server Error"
@@ -136,8 +137,8 @@ func SubmitFeedback(w http.ResponseWriter, r *http.Request) {
 
 	// Respond with success message
 	w.WriteHeader(http.StatusCreated)
-	if err := json.NewEncoder(w).Encode(map[string]string{
-		"message": "Feedback submitted successfully",
+	if err := json.NewEncoder(w).Encode(types.MessageResponse{
+		Message: "Feedback submitted successfully",
 	}); err != nil {
 		http.Error(w, "Error submitting feedback", http.StatusInternalServerError)
 	}

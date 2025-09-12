@@ -10,6 +10,7 @@ import (
 
 	"github.com/dgrijalva/jwt-go"
 	"go-api/db"
+	"go-api/types"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -35,7 +36,7 @@ type Claims struct {
 // @Accept json
 // @Produce json
 // @Param credentials body handlers.Credentials true "Email and Password"
-// @Success 200 {object} map[string]string
+// @Success 200 {object} types.TokenResponse
 // @Failure 401 {string} string "Unauthorized"
 // @Router /login [post]
 func Login(w http.ResponseWriter, r *http.Request) {
@@ -78,7 +79,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	response := map[string]string{"token": tokenString}
+	response := types.TokenResponse{Token: tokenString}
 	if err := json.NewEncoder(w).Encode(response); err != nil {
 		fmt.Printf("Error encoding response JSON: %v\n", err)
 		http.Error(w, "Failed to encode response", http.StatusInternalServerError)

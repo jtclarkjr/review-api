@@ -7,6 +7,7 @@ import (
 	"sync"
 
 	"go-api/db"
+	"go-api/types"
 
 	"github.com/jtclarkjr/router-go"
 	"github.com/lib/pq"
@@ -21,7 +22,7 @@ import (
 // @Accept json
 // @Produce json
 // @Param employee body object true "Employee info"
-// @Success 201 {object} map[string]interface{}
+// @Success 201 {object} types.CreateEmployeeResponse
 // @Failure 400 {string} string "Bad Request"
 // @Failure 500 {string} string "Internal Server Error"
 // @Router /admin/employees [post]
@@ -77,9 +78,9 @@ func AddEmployee(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusCreated)
-	err = json.NewEncoder(w).Encode(map[string]interface{}{
-		"employee_id": employeeID,
-		"email":       employee.Email,
+	err = json.NewEncoder(w).Encode(types.CreateEmployeeResponse{
+		EmployeeID: employeeID,
+		Email:      employee.Email,
 	})
 	if err != nil {
 		return
@@ -91,7 +92,7 @@ func AddEmployee(w http.ResponseWriter, r *http.Request) {
 // @Description Retrieves a list of all employees
 // @Tags Admin
 // @Produce json
-// @Success 200 {array} map[string]interface{}
+// @Success 200 {array} types.EmployeeResponse
 // @Failure 500 {string} string "Internal Server Error"
 // @Router /admin/employees [get]
 func GetEmployees(w http.ResponseWriter, r *http.Request) {
@@ -106,7 +107,7 @@ func GetEmployees(w http.ResponseWriter, r *http.Request) {
 		}
 	}()
 
-	var employees []map[string]interface{}
+	var employees []types.EmployeeResponse
 	for rows.Next() {
 		var id int
 		var email, position string
@@ -115,10 +116,10 @@ func GetEmployees(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, "Error scanning employee data", http.StatusInternalServerError)
 			return
 		}
-		employees = append(employees, map[string]interface{}{
-			"id":       id,
-			"email":    email,
-			"position": position,
+		employees = append(employees, types.EmployeeResponse{
+			ID:       id,
+			Email:    email,
+			Position: position,
 		})
 	}
 
@@ -197,7 +198,7 @@ func RemoveEmployee(w http.ResponseWriter, r *http.Request) {
 // @Accept json
 // @Produce json
 // @Param review body object true "Review info"
-// @Success 201 {object} map[string]interface{}
+// @Success 201 {object} types.CreateReviewResponse
 // @Failure 400 {string} string "Bad Request"
 // @Failure 500 {string} string "Internal Server Error"
 // @Router /admin/reviews [post]
@@ -269,8 +270,8 @@ func AddReview(w http.ResponseWriter, r *http.Request) {
 
 	// Respond with the review ID
 	w.WriteHeader(http.StatusCreated)
-	err = json.NewEncoder(w).Encode(map[string]interface{}{
-		"review_id": reviewID,
+	err = json.NewEncoder(w).Encode(types.CreateReviewResponse{
+		ReviewID: reviewID,
 	})
 	if err != nil {
 		http.Error(w, "Error encoding response for add review", http.StatusInternalServerError)
@@ -372,7 +373,7 @@ func UpdateReview(w http.ResponseWriter, r *http.Request) {
 // @Description Fetches all reviews along with reviewers
 // @Tags Admin
 // @Produce json
-// @Success 200 {array} map[string]interface{}
+// @Success 200 {array} types.ReviewResponse
 // @Failure 500 {string} string "Internal Server Error"
 // @Router /admin/reviews [get]
 func GetReviews(w http.ResponseWriter, r *http.Request) {
@@ -394,7 +395,7 @@ func GetReviews(w http.ResponseWriter, r *http.Request) {
 		}
 	}()
 
-	var reviews []map[string]interface{}
+	var reviews []types.ReviewResponse
 	for rows.Next() {
 		var id, employeeID int
 		var employeeEmail, performanceReview string
@@ -406,14 +407,14 @@ func GetReviews(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, "Error scanning review data", http.StatusInternalServerError)
 			return
 		}
-		reviews = append(reviews, map[string]interface{}{
-			"id":                 id,
-			"employee_id":        employeeID,
-			"employee_email":     employeeEmail,
-			"performance_review": performanceReview,
-			"comments":           comments,
-			"reviewer_ids":       reviewerIDs,
-			"created_at":         createdAt,
+		reviews = append(reviews, types.ReviewResponse{
+			ID:                id,
+			EmployeeID:        employeeID,
+			EmployeeEmail:     employeeEmail,
+			PerformanceReview: performanceReview,
+			Comments:          comments,
+			ReviewerIDs:       reviewerIDs,
+			CreatedAt:         createdAt,
 		})
 	}
 
