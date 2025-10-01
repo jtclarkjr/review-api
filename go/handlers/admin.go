@@ -237,15 +237,13 @@ func AddReview(w http.ResponseWriter, r *http.Request) {
 	var wg sync.WaitGroup
 
 	for _, reviewerID := range review.ReviewerIDs {
-		wg.Add(1)
-		go func(rID int) {
-			defer wg.Done()
+		wg.Go(func() {
 			_, err := tx.Exec(
 				"INSERT INTO review_reviewers (review_id, reviewer_id) VALUES ($1, $2)",
-				reviewID, rID,
+				reviewID, reviewerID,
 			)
 			errChan <- err
-		}(reviewerID)
+		})
 	}
 
 	// Wait for all goroutines to finish
@@ -334,15 +332,13 @@ func UpdateReview(w http.ResponseWriter, r *http.Request) {
 	var wg sync.WaitGroup
 
 	for _, reviewerID := range payload.ReviewerIDs {
-		wg.Add(1)
-		go func(rID int) {
-			defer wg.Done()
+		wg.Go(func() {
 			_, err := tx.Exec(
 				"INSERT INTO review_reviewers (review_id, reviewer_id) VALUES ($1, $2)",
-				reviewID, rID,
+				reviewID, reviewerID,
 			)
 			errChan <- err
-		}(reviewerID)
+		})
 	}
 
 	// Wait for all goroutines to finish
