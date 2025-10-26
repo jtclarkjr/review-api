@@ -10,6 +10,10 @@ import (
 	"go-api/handlers"
 )
 
+type contextKey string
+
+const userIDKey contextKey = "id"
+
 // AuthAdmin is middlewares that validates a JWT token and ensures the user has an admin role
 func AuthAdmin(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -37,7 +41,7 @@ func AuthAdmin(next http.Handler) http.Handler {
 
 		// Pass the email to the request context
 		// Maybe context not needed anymore
-		ctx := context.WithValue(r.Context(), "id", claims.ID)
+		ctx := context.WithValue(r.Context(), userIDKey, claims.ID)
 		next.ServeHTTP(w, r.WithContext(ctx))
 	})
 }
@@ -62,7 +66,7 @@ func AuthEmployee(next http.Handler) http.Handler {
 		}
 
 		// Pass the email to the request context
-		ctx := context.WithValue(r.Context(), "id", claims.ID)
+		ctx := context.WithValue(r.Context(), userIDKey, claims.ID)
 		next.ServeHTTP(w, r.WithContext(ctx))
 	})
 }

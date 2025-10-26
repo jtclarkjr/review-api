@@ -9,6 +9,10 @@ import (
 	"go-api/types"
 )
 
+type contextKey string
+
+const userIDKey contextKey = "id"
+
 // ListReviews godoc
 // @Summary List assigned reviews
 // @Description Lists reviews assigned to the employee that have not been submitted yet
@@ -20,7 +24,7 @@ import (
 // @Router /employee/reviews [get]
 func ListReviews(w http.ResponseWriter, r *http.Request) {
 	// Get id from context added from auth
-	idValue := r.Context().Value("id")
+	idValue := r.Context().Value(userIDKey)
 	employeeID, ok := idValue.(string)
 	if !ok || employeeID == "" {
 		http.Error(w, "Invalid ID", http.StatusUnauthorized)
@@ -90,7 +94,7 @@ func ListReviews(w http.ResponseWriter, r *http.Request) {
 // @Router /employee/reviews/feedback [post]
 func SubmitFeedback(w http.ResponseWriter, r *http.Request) {
 	// Get id from context added from auth
-	idValue := r.Context().Value("id")
+	idValue := r.Context().Value(userIDKey)
 	employeeID, ok := idValue.(string)
 	if !ok || employeeID == "" {
 		http.Error(w, "Invalid ID", http.StatusUnauthorized)
@@ -103,7 +107,11 @@ func SubmitFeedback(w http.ResponseWriter, r *http.Request) {
 		Comment  string `json:"comment"`
 	}
 
-	defer r.Body.Close() // Ensure body is closed
+	defer func() {
+		if closeErr := r.Body.Close(); closeErr != nil {
+			log.Printf("Error closing request body: %v", closeErr)
+		}
+	}()
 	if err := json.NewDecoder(r.Body).Decode(&feedback); err != nil {
 		http.Error(w, "Invalid request payload", http.StatusBadRequest)
 		return
