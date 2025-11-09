@@ -9,7 +9,7 @@ require (
 )
 
 require (
-	github.com/jtclarkjr/router-go v0.1.0-alpha.2
+	github.com/jtclarkjr/router-go v0.4.1
 	github.com/swaggo/http-swagger/v2 v2.0.2
 	github.com/swaggo/swag v1.16.4
 )
